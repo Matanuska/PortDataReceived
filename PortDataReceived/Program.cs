@@ -21,27 +21,43 @@ namespace PortDataReceived
 
 
 
-            Class1 myport1 = new Class1();
-            myport1.PortName = "COM8";
+            SerialPort myport1 = new SerialPort();
+            try
+            {     
+                myport1.PortName = "COM8";
+                myport1.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+                myport1.Open();
+                myport1.DiscardOutBuffer();
+                myport1.DiscardInBuffer();
+            }
+            catch (System.IO.IOException e) { }
+            finally { }
 
-            Class1 myport2 = new Class1();
-            myport2.PortName = "COM9";
+            SerialPort myport2 = new SerialPort();
+            try
+            {               
+                myport2.PortName = "COM9";
+                myport2.DtrEnable = true;
+                myport2.RtsEnable = true;
 
-            myport2.DtrEnable = true;
-            myport2.RtsEnable = true;
+                myport2.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+                myport2.Open();
+                myport2.DiscardOutBuffer();
+                myport2.DiscardInBuffer();
+            }
+            catch (System.IO.IOException e) { }
+            finally { }
 
-            myport1.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-            myport2.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
-
-           
-            myport1.Open();
-            myport2.Open();
 
             Console.WriteLine("Press any key to continue...");
             Console.WriteLine();
             Console.ReadKey();
-            myport1.Close();
-            myport2.Close();
+
+            if (myport1.IsOpen)
+                myport1.Close();
+
+            if(myport2.IsOpen)
+                myport2.Close();
 
 
         }
@@ -52,7 +68,7 @@ namespace PortDataReceived
         {
             SerialPort sp = (SerialPort)sender;
             string indata = sp.ReadExisting();
-            Console.WriteLine("Data Received:");
+           // Console.WriteLine("Data Received:");
             Console.Write(indata);
         }
     }
