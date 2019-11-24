@@ -70,6 +70,9 @@ namespace PortDataReceived
             string indata = sp.ReadExisting();
            // Console.WriteLine("Data Received:");
             Console.Write(indata);
+
+           // ((SerialPort)sender).WriteLine("Bingo");
+
         }
     }
 }
